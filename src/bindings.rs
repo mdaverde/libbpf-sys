@@ -185,6 +185,8 @@ pub const BPF_F_ANY_ALIGNMENT: u32 = 2;
 pub const BPF_F_TEST_RND_HI32: u32 = 4;
 pub const BPF_F_TEST_STATE_FREQ: u32 = 8;
 pub const BPF_F_SLEEPABLE: u32 = 16;
+pub const BPF_F_XDP_HAS_FRAGS: u32 = 32;
+pub const BPF_F_KPROBE_MULTI_RETURN: u32 = 1;
 pub const BPF_PSEUDO_MAP_FD: u32 = 1;
 pub const BPF_PSEUDO_MAP_IDX: u32 = 5;
 pub const BPF_PSEUDO_MAP_VALUE: u32 = 2;
@@ -195,6 +197,7 @@ pub const BPF_PSEUDO_CALL: u32 = 1;
 pub const BPF_PSEUDO_KFUNC_CALL: u32 = 2;
 pub const BPF_F_QUERY_EFFECTIVE: u32 = 1;
 pub const BPF_F_TEST_RUN_ON_CPU: u32 = 1;
+pub const BPF_F_TEST_XDP_LIVE_FRAMES: u32 = 2;
 pub const BPF_BUILD_ID_SIZE: u32 = 20;
 pub const BPF_OBJ_NAME_LEN: u32 = 16;
 pub const XDP_PACKET_HEADROOM: u32 = 256;
@@ -254,7 +257,7 @@ pub const XDP_ATTACHED_DRV: ::std::os::raw::c_uint = 1;
 pub const XDP_ATTACHED_SKB: ::std::os::raw::c_uint = 2;
 pub const XDP_ATTACHED_HW: ::std::os::raw::c_uint = 3;
 pub const XDP_ATTACHED_MULTI: ::std::os::raw::c_uint = 4;
-pub type _bindgen_ty_39 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_42 = ::std::os::raw::c_uint;
 pub const BPF_REG_0: ::std::os::raw::c_uint = 0;
 pub const BPF_REG_1: ::std::os::raw::c_uint = 1;
 pub const BPF_REG_2: ::std::os::raw::c_uint = 2;
@@ -267,7 +270,7 @@ pub const BPF_REG_8: ::std::os::raw::c_uint = 8;
 pub const BPF_REG_9: ::std::os::raw::c_uint = 9;
 pub const BPF_REG_10: ::std::os::raw::c_uint = 10;
 pub const __MAX_BPF_REG: ::std::os::raw::c_uint = 11;
-pub type _bindgen_ty_44 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_48 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_insn {
@@ -491,7 +494,8 @@ pub const BPF_SK_SKB_VERDICT: bpf_attach_type = 38;
 pub const BPF_SK_REUSEPORT_SELECT: bpf_attach_type = 39;
 pub const BPF_SK_REUSEPORT_SELECT_OR_MIGRATE: bpf_attach_type = 40;
 pub const BPF_PERF_EVENT: bpf_attach_type = 41;
-pub const __MAX_BPF_ATTACH_TYPE: bpf_attach_type = 42;
+pub const BPF_TRACE_KPROBE_MULTI: bpf_attach_type = 42;
+pub const __MAX_BPF_ATTACH_TYPE: bpf_attach_type = 43;
 pub type bpf_attach_type = ::std::os::raw::c_uint;
 pub const BPF_LINK_TYPE_UNSPEC: bpf_link_type = 0;
 pub const BPF_LINK_TYPE_RAW_TRACEPOINT: bpf_link_type = 1;
@@ -501,13 +505,14 @@ pub const BPF_LINK_TYPE_ITER: bpf_link_type = 4;
 pub const BPF_LINK_TYPE_NETNS: bpf_link_type = 5;
 pub const BPF_LINK_TYPE_XDP: bpf_link_type = 6;
 pub const BPF_LINK_TYPE_PERF_EVENT: bpf_link_type = 7;
-pub const MAX_BPF_LINK_TYPE: bpf_link_type = 8;
+pub const BPF_LINK_TYPE_KPROBE_MULTI: bpf_link_type = 8;
+pub const MAX_BPF_LINK_TYPE: bpf_link_type = 9;
 pub type bpf_link_type = ::std::os::raw::c_uint;
 pub const BPF_ANY: ::std::os::raw::c_uint = 0;
 pub const BPF_NOEXIST: ::std::os::raw::c_uint = 1;
 pub const BPF_EXIST: ::std::os::raw::c_uint = 2;
 pub const BPF_F_LOCK: ::std::os::raw::c_uint = 4;
-pub type _bindgen_ty_45 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_49 = ::std::os::raw::c_uint;
 pub const BPF_F_NO_PREALLOC: ::std::os::raw::c_uint = 1;
 pub const BPF_F_NO_COMMON_LRU: ::std::os::raw::c_uint = 2;
 pub const BPF_F_NUMA_NODE: ::std::os::raw::c_uint = 4;
@@ -521,7 +526,7 @@ pub const BPF_F_CLONE: ::std::os::raw::c_uint = 512;
 pub const BPF_F_MMAPABLE: ::std::os::raw::c_uint = 1024;
 pub const BPF_F_PRESERVE_ELEMS: ::std::os::raw::c_uint = 2048;
 pub const BPF_F_INNER_MAP: ::std::os::raw::c_uint = 4096;
-pub type _bindgen_ty_46 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_50 = ::std::os::raw::c_uint;
 pub const BPF_STATS_RUN_TIME: bpf_stats_type = 0;
 pub type bpf_stats_type = ::std::os::raw::c_uint;
 pub const BPF_STACK_BUILD_ID_EMPTY: bpf_stack_build_id_status = 0;
@@ -669,9 +674,11 @@ pub struct bpf_attr__bindgen_ty_4 {
     pub line_info_cnt: __u32,
     pub attach_btf_id: __u32,
     pub __bindgen_anon_1: bpf_attr__bindgen_ty_4__bindgen_ty_1,
-    pub _bitfield_align_1: [u8; 0],
-    pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize]>,
+    pub core_relo_cnt: __u32,
     pub fd_array: __u64,
+    pub core_relos: __u64,
+    pub core_relo_rec_size: __u32,
+    pub __bindgen_padding_0: [u8; 4usize],
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -695,13 +702,6 @@ impl Default for bpf_attr__bindgen_ty_4 {
             ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
             s.assume_init()
         }
-    }
-}
-impl bpf_attr__bindgen_ty_4 {
-    #[inline]
-    pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
-        __bindgen_bitfield_unit
     }
 }
 #[repr(C)]
@@ -737,6 +737,8 @@ pub struct bpf_attr__bindgen_ty_7 {
     pub ctx_out: __u64,
     pub flags: __u32,
     pub cpu: __u32,
+    pub batch_size: __u32,
+    pub __bindgen_padding_0: [u8; 4usize],
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -850,6 +852,7 @@ pub union bpf_attr__bindgen_ty_14__bindgen_ty_2 {
     pub target_btf_id: __u32,
     pub __bindgen_anon_1: bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_1,
     pub perf_event: bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_2,
+    pub kprobe_multi: bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_3,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
@@ -862,6 +865,15 @@ pub struct bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_1 {
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_2 {
     pub bpf_cookie: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy, Clone)]
+pub struct bpf_attr__bindgen_ty_14__bindgen_ty_2__bindgen_ty_3 {
+    pub flags: __u32,
+    pub cnt: __u32,
+    pub syms: __u64,
+    pub addrs: __u64,
+    pub cookies: __u64,
 }
 impl Default for bpf_attr__bindgen_ty_14__bindgen_ty_2 {
     fn default() -> Self {
@@ -1102,42 +1114,55 @@ pub const BPF_FUNC_trace_vprintk: bpf_func_id = 177;
 pub const BPF_FUNC_skc_to_unix_sock: bpf_func_id = 178;
 pub const BPF_FUNC_kallsyms_lookup_name: bpf_func_id = 179;
 pub const BPF_FUNC_find_vma: bpf_func_id = 180;
-pub const __BPF_FUNC_MAX_ID: bpf_func_id = 181;
+pub const BPF_FUNC_loop: bpf_func_id = 181;
+pub const BPF_FUNC_strncmp: bpf_func_id = 182;
+pub const BPF_FUNC_get_func_arg: bpf_func_id = 183;
+pub const BPF_FUNC_get_func_ret: bpf_func_id = 184;
+pub const BPF_FUNC_get_func_arg_cnt: bpf_func_id = 185;
+pub const BPF_FUNC_get_retval: bpf_func_id = 186;
+pub const BPF_FUNC_set_retval: bpf_func_id = 187;
+pub const BPF_FUNC_xdp_get_buff_len: bpf_func_id = 188;
+pub const BPF_FUNC_xdp_load_bytes: bpf_func_id = 189;
+pub const BPF_FUNC_xdp_store_bytes: bpf_func_id = 190;
+pub const BPF_FUNC_copy_from_user_task: bpf_func_id = 191;
+pub const BPF_FUNC_skb_set_tstamp: bpf_func_id = 192;
+pub const BPF_FUNC_ima_file_hash: bpf_func_id = 193;
+pub const __BPF_FUNC_MAX_ID: bpf_func_id = 194;
 pub type bpf_func_id = ::std::os::raw::c_uint;
 pub const BPF_F_RECOMPUTE_CSUM: ::std::os::raw::c_uint = 1;
 pub const BPF_F_INVALIDATE_HASH: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_47 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_51 = ::std::os::raw::c_uint;
 pub const BPF_F_HDR_FIELD_MASK: ::std::os::raw::c_uint = 15;
-pub type _bindgen_ty_48 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_52 = ::std::os::raw::c_uint;
 pub const BPF_F_PSEUDO_HDR: ::std::os::raw::c_uint = 16;
 pub const BPF_F_MARK_MANGLED_0: ::std::os::raw::c_uint = 32;
 pub const BPF_F_MARK_ENFORCE: ::std::os::raw::c_uint = 64;
-pub type _bindgen_ty_49 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_53 = ::std::os::raw::c_uint;
 pub const BPF_F_INGRESS: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_50 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_54 = ::std::os::raw::c_uint;
 pub const BPF_F_TUNINFO_IPV6: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_51 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_55 = ::std::os::raw::c_uint;
 pub const BPF_F_SKIP_FIELD_MASK: ::std::os::raw::c_uint = 255;
 pub const BPF_F_USER_STACK: ::std::os::raw::c_uint = 256;
 pub const BPF_F_FAST_STACK_CMP: ::std::os::raw::c_uint = 512;
 pub const BPF_F_REUSE_STACKID: ::std::os::raw::c_uint = 1024;
 pub const BPF_F_USER_BUILD_ID: ::std::os::raw::c_uint = 2048;
-pub type _bindgen_ty_52 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_56 = ::std::os::raw::c_uint;
 pub const BPF_F_ZERO_CSUM_TX: ::std::os::raw::c_uint = 2;
 pub const BPF_F_DONT_FRAGMENT: ::std::os::raw::c_uint = 4;
 pub const BPF_F_SEQ_NUMBER: ::std::os::raw::c_uint = 8;
-pub type _bindgen_ty_53 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_57 = ::std::os::raw::c_uint;
 pub const BPF_F_INDEX_MASK: ::std::os::raw::c_ulong = 4294967295;
 pub const BPF_F_CURRENT_CPU: ::std::os::raw::c_ulong = 4294967295;
 pub const BPF_F_CTXLEN_MASK: ::std::os::raw::c_ulong = 4503595332403200;
-pub type _bindgen_ty_54 = ::std::os::raw::c_ulong;
+pub type _bindgen_ty_58 = ::std::os::raw::c_ulong;
 pub const BPF_F_CURRENT_NETNS: ::std::os::raw::c_int = -1;
-pub type _bindgen_ty_55 = ::std::os::raw::c_int;
+pub type _bindgen_ty_59 = ::std::os::raw::c_int;
 pub const BPF_CSUM_LEVEL_QUERY: ::std::os::raw::c_uint = 0;
 pub const BPF_CSUM_LEVEL_INC: ::std::os::raw::c_uint = 1;
 pub const BPF_CSUM_LEVEL_DEC: ::std::os::raw::c_uint = 2;
 pub const BPF_CSUM_LEVEL_RESET: ::std::os::raw::c_uint = 3;
-pub type _bindgen_ty_56 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_60 = ::std::os::raw::c_uint;
 pub const BPF_F_ADJ_ROOM_FIXED_GSO: ::std::os::raw::c_uint = 1;
 pub const BPF_F_ADJ_ROOM_ENCAP_L3_IPV4: ::std::os::raw::c_uint = 2;
 pub const BPF_F_ADJ_ROOM_ENCAP_L3_IPV6: ::std::os::raw::c_uint = 4;
@@ -1145,32 +1170,32 @@ pub const BPF_F_ADJ_ROOM_ENCAP_L4_GRE: ::std::os::raw::c_uint = 8;
 pub const BPF_F_ADJ_ROOM_ENCAP_L4_UDP: ::std::os::raw::c_uint = 16;
 pub const BPF_F_ADJ_ROOM_NO_CSUM_RESET: ::std::os::raw::c_uint = 32;
 pub const BPF_F_ADJ_ROOM_ENCAP_L2_ETH: ::std::os::raw::c_uint = 64;
-pub type _bindgen_ty_57 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_61 = ::std::os::raw::c_uint;
 pub const BPF_ADJ_ROOM_ENCAP_L2_MASK: ::std::os::raw::c_uint = 255;
 pub const BPF_ADJ_ROOM_ENCAP_L2_SHIFT: ::std::os::raw::c_uint = 56;
-pub type _bindgen_ty_58 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_62 = ::std::os::raw::c_uint;
 pub const BPF_F_SYSCTL_BASE_NAME: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_59 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_63 = ::std::os::raw::c_uint;
 pub const BPF_LOCAL_STORAGE_GET_F_CREATE: ::std::os::raw::c_uint = 1;
 pub const BPF_SK_STORAGE_GET_F_CREATE: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_60 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_64 = ::std::os::raw::c_uint;
 pub const BPF_F_GET_BRANCH_RECORDS_SIZE: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_61 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_65 = ::std::os::raw::c_uint;
 pub const BPF_RB_NO_WAKEUP: ::std::os::raw::c_uint = 1;
 pub const BPF_RB_FORCE_WAKEUP: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_62 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_66 = ::std::os::raw::c_uint;
 pub const BPF_RB_AVAIL_DATA: ::std::os::raw::c_uint = 0;
 pub const BPF_RB_RING_SIZE: ::std::os::raw::c_uint = 1;
 pub const BPF_RB_CONS_POS: ::std::os::raw::c_uint = 2;
 pub const BPF_RB_PROD_POS: ::std::os::raw::c_uint = 3;
-pub type _bindgen_ty_63 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_67 = ::std::os::raw::c_uint;
 pub const BPF_RINGBUF_BUSY_BIT: ::std::os::raw::c_uint = 2147483648;
 pub const BPF_RINGBUF_DISCARD_BIT: ::std::os::raw::c_uint = 1073741824;
 pub const BPF_RINGBUF_HDR_SZ: ::std::os::raw::c_uint = 8;
-pub type _bindgen_ty_64 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_68 = ::std::os::raw::c_uint;
 pub const BPF_SK_LOOKUP_F_REPLACE: ::std::os::raw::c_uint = 1;
 pub const BPF_SK_LOOKUP_F_NO_REUSEPORT: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_65 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_69 = ::std::os::raw::c_uint;
 pub const BPF_ADJ_ROOM_NET: bpf_adj_room_mode = 0;
 pub const BPF_ADJ_ROOM_MAC: bpf_adj_room_mode = 1;
 pub type bpf_adj_room_mode = ::std::os::raw::c_uint;
@@ -1182,10 +1207,13 @@ pub const BPF_LWT_ENCAP_SEG6_INLINE: bpf_lwt_encap_mode = 1;
 pub const BPF_LWT_ENCAP_IP: bpf_lwt_encap_mode = 2;
 pub type bpf_lwt_encap_mode = ::std::os::raw::c_uint;
 pub const BPF_F_BPRM_SECUREEXEC: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_66 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_70 = ::std::os::raw::c_uint;
 pub const BPF_F_BROADCAST: ::std::os::raw::c_uint = 8;
 pub const BPF_F_EXCLUDE_INGRESS: ::std::os::raw::c_uint = 16;
-pub type _bindgen_ty_67 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_71 = ::std::os::raw::c_uint;
+pub const BPF_SKB_TSTAMP_UNSPEC: ::std::os::raw::c_uint = 0;
+pub const BPF_SKB_TSTAMP_DELIVERY_MONO: ::std::os::raw::c_uint = 1;
+pub type _bindgen_ty_72 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct bpf_tunnel_key {
@@ -1270,11 +1298,20 @@ pub struct bpf_sock {
     pub src_ip4: __u32,
     pub src_ip6: [__u32; 4usize],
     pub src_port: __u32,
-    pub dst_port: __u32,
+    pub dst_port: __be16,
+    pub _bitfield_align_1: [u8; 0],
+    pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
     pub dst_ip4: __u32,
     pub dst_ip6: [__u32; 4usize],
     pub state: __u32,
     pub rx_queue_mapping: __s32,
+}
+impl bpf_sock {
+    #[inline]
+    pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 2usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        __bindgen_bitfield_unit
+    }
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
@@ -1831,7 +1868,7 @@ pub const BPF_SOCK_OPS_PARSE_ALL_HDR_OPT_CB_FLAG: ::std::os::raw::c_uint = 16;
 pub const BPF_SOCK_OPS_PARSE_UNKNOWN_HDR_OPT_CB_FLAG: ::std::os::raw::c_uint = 32;
 pub const BPF_SOCK_OPS_WRITE_HDR_OPT_CB_FLAG: ::std::os::raw::c_uint = 64;
 pub const BPF_SOCK_OPS_ALL_CB_FLAGS: ::std::os::raw::c_uint = 127;
-pub type _bindgen_ty_68 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_73 = ::std::os::raw::c_uint;
 pub const BPF_SOCK_OPS_VOID: ::std::os::raw::c_uint = 0;
 pub const BPF_SOCK_OPS_TIMEOUT_INIT: ::std::os::raw::c_uint = 1;
 pub const BPF_SOCK_OPS_RWND_INIT: ::std::os::raw::c_uint = 2;
@@ -1848,7 +1885,7 @@ pub const BPF_SOCK_OPS_RTT_CB: ::std::os::raw::c_uint = 12;
 pub const BPF_SOCK_OPS_PARSE_HDR_OPT_CB: ::std::os::raw::c_uint = 13;
 pub const BPF_SOCK_OPS_HDR_OPT_LEN_CB: ::std::os::raw::c_uint = 14;
 pub const BPF_SOCK_OPS_WRITE_HDR_OPT_CB: ::std::os::raw::c_uint = 15;
-pub type _bindgen_ty_69 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_74 = ::std::os::raw::c_uint;
 pub const BPF_TCP_ESTABLISHED: ::std::os::raw::c_uint = 1;
 pub const BPF_TCP_SYN_SENT: ::std::os::raw::c_uint = 2;
 pub const BPF_TCP_SYN_RECV: ::std::os::raw::c_uint = 3;
@@ -1862,12 +1899,12 @@ pub const BPF_TCP_LISTEN: ::std::os::raw::c_uint = 10;
 pub const BPF_TCP_CLOSING: ::std::os::raw::c_uint = 11;
 pub const BPF_TCP_NEW_SYN_RECV: ::std::os::raw::c_uint = 12;
 pub const BPF_TCP_MAX_STATES: ::std::os::raw::c_uint = 13;
-pub type _bindgen_ty_70 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_75 = ::std::os::raw::c_uint;
 pub const BPF_LOAD_HDR_OPT_TCP_SYN: ::std::os::raw::c_uint = 1;
-pub type _bindgen_ty_72 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_77 = ::std::os::raw::c_uint;
 pub const BPF_WRITE_HDR_TCP_CURRENT_MSS: ::std::os::raw::c_uint = 1;
 pub const BPF_WRITE_HDR_TCP_SYNACK_COOKIE: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_73 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_78 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_perf_event_value {
@@ -1878,10 +1915,10 @@ pub struct bpf_perf_event_value {
 pub const BPF_DEVCG_ACC_MKNOD: ::std::os::raw::c_uint = 1;
 pub const BPF_DEVCG_ACC_READ: ::std::os::raw::c_uint = 2;
 pub const BPF_DEVCG_ACC_WRITE: ::std::os::raw::c_uint = 4;
-pub type _bindgen_ty_74 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_79 = ::std::os::raw::c_uint;
 pub const BPF_DEVCG_DEV_BLOCK: ::std::os::raw::c_uint = 1;
 pub const BPF_DEVCG_DEV_CHAR: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_75 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_80 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_cgroup_dev_ctx {
@@ -1896,7 +1933,7 @@ pub struct bpf_raw_tracepoint_args {
 }
 pub const BPF_FIB_LOOKUP_DIRECT: ::std::os::raw::c_uint = 1;
 pub const BPF_FIB_LOOKUP_OUTPUT: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_76 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_81 = ::std::os::raw::c_uint;
 pub const BPF_FIB_LKUP_RET_SUCCESS: ::std::os::raw::c_uint = 0;
 pub const BPF_FIB_LKUP_RET_BLACKHOLE: ::std::os::raw::c_uint = 1;
 pub const BPF_FIB_LKUP_RET_UNREACHABLE: ::std::os::raw::c_uint = 2;
@@ -1906,7 +1943,7 @@ pub const BPF_FIB_LKUP_RET_FWD_DISABLED: ::std::os::raw::c_uint = 5;
 pub const BPF_FIB_LKUP_RET_UNSUPP_LWT: ::std::os::raw::c_uint = 6;
 pub const BPF_FIB_LKUP_RET_NO_NEIGH: ::std::os::raw::c_uint = 7;
 pub const BPF_FIB_LKUP_RET_FRAG_NEEDED: ::std::os::raw::c_uint = 8;
-pub type _bindgen_ty_77 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_82 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct bpf_fib_lookup {
@@ -2040,7 +2077,7 @@ pub type bpf_task_fd_type = ::std::os::raw::c_uint;
 pub const BPF_FLOW_DISSECTOR_F_PARSE_1ST_FRAG: ::std::os::raw::c_uint = 1;
 pub const BPF_FLOW_DISSECTOR_F_STOP_AT_FLOW_LABEL: ::std::os::raw::c_uint = 2;
 pub const BPF_FLOW_DISSECTOR_F_STOP_AT_ENCAP: ::std::os::raw::c_uint = 4;
-pub type _bindgen_ty_78 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_83 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct bpf_flow_keys {
@@ -2236,7 +2273,9 @@ pub struct bpf_sk_lookup {
     pub protocol: __u32,
     pub remote_ip4: __u32,
     pub remote_ip6: [__u32; 4usize],
-    pub remote_port: __u32,
+    pub remote_port: __be16,
+    pub _bitfield_align_1: [u8; 0],
+    pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
     pub local_ip4: __u32,
     pub local_ip6: [__u32; 4usize],
     pub local_port: __u32,
@@ -2290,6 +2329,13 @@ impl Default for bpf_sk_lookup {
         }
     }
 }
+impl bpf_sk_lookup {
+    #[inline]
+    pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 2usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        __bindgen_bitfield_unit
+    }
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct btf_ptr {
@@ -2310,17 +2356,90 @@ pub const BTF_F_COMPACT: ::std::os::raw::c_uint = 1;
 pub const BTF_F_NONAME: ::std::os::raw::c_uint = 2;
 pub const BTF_F_PTR_RAW: ::std::os::raw::c_uint = 4;
 pub const BTF_F_ZERO: ::std::os::raw::c_uint = 8;
-pub type _bindgen_ty_79 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_84 = ::std::os::raw::c_uint;
+pub const BPF_CORE_FIELD_BYTE_OFFSET: bpf_core_relo_kind = 0;
+pub const BPF_CORE_FIELD_BYTE_SIZE: bpf_core_relo_kind = 1;
+pub const BPF_CORE_FIELD_EXISTS: bpf_core_relo_kind = 2;
+pub const BPF_CORE_FIELD_SIGNED: bpf_core_relo_kind = 3;
+pub const BPF_CORE_FIELD_LSHIFT_U64: bpf_core_relo_kind = 4;
+pub const BPF_CORE_FIELD_RSHIFT_U64: bpf_core_relo_kind = 5;
+pub const BPF_CORE_TYPE_ID_LOCAL: bpf_core_relo_kind = 6;
+pub const BPF_CORE_TYPE_ID_TARGET: bpf_core_relo_kind = 7;
+pub const BPF_CORE_TYPE_EXISTS: bpf_core_relo_kind = 8;
+pub const BPF_CORE_TYPE_SIZE: bpf_core_relo_kind = 9;
+pub const BPF_CORE_ENUMVAL_EXISTS: bpf_core_relo_kind = 10;
+pub const BPF_CORE_ENUMVAL_VALUE: bpf_core_relo_kind = 11;
+pub type bpf_core_relo_kind = ::std::os::raw::c_uint;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_core_relo {
+    pub insn_off: __u32,
+    pub type_id: __u32,
+    pub access_str_off: __u32,
+    pub kind: bpf_core_relo_kind,
+}
+impl Default for bpf_core_relo {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 pub const LIBBPF_STRICT_ALL: libbpf_strict_mode = 4294967295;
 pub const LIBBPF_STRICT_NONE: libbpf_strict_mode = 0;
 pub const LIBBPF_STRICT_CLEAN_PTRS: libbpf_strict_mode = 1;
 pub const LIBBPF_STRICT_DIRECT_ERRS: libbpf_strict_mode = 2;
 pub const LIBBPF_STRICT_SEC_NAME: libbpf_strict_mode = 4;
 pub const LIBBPF_STRICT_NO_OBJECT_LIST: libbpf_strict_mode = 8;
-pub const __LIBBPF_STRICT_LAST: libbpf_strict_mode = 9;
+pub const LIBBPF_STRICT_AUTO_RLIMIT_MEMLOCK: libbpf_strict_mode = 16;
+pub const LIBBPF_STRICT_MAP_DEFINITIONS: libbpf_strict_mode = 32;
+pub const __LIBBPF_STRICT_LAST: libbpf_strict_mode = 33;
 pub type libbpf_strict_mode = ::std::os::raw::c_uint;
 extern "C" {
     pub fn libbpf_set_strict_mode(mode: libbpf_strict_mode) -> ::std::os::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_program {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_map {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct btf {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct btf_ext {
+    _unused: [u8; 0],
+}
+extern "C" {
+    pub fn bpf_program__get_type(prog: *const bpf_program) -> bpf_prog_type;
+}
+extern "C" {
+    pub fn bpf_program__get_expected_attach_type(prog: *const bpf_program) -> bpf_attach_type;
+}
+extern "C" {
+    pub fn bpf_map__get_pin_path(map: *const bpf_map) -> *const ::std::os::raw::c_char;
+}
+extern "C" {
+    pub fn btf__get_raw_data(btf: *const btf, size: *mut __u32) -> *const ::std::os::raw::c_void;
+}
+extern "C" {
+    pub fn btf_ext__get_raw_data(
+        btf_ext: *const btf_ext,
+        size: *mut __u32,
+    ) -> *const ::std::os::raw::c_void;
+}
+extern "C" {
+    pub fn libbpf_set_memlock_rlim(memlock_bytes: size_t) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
@@ -2330,11 +2449,11 @@ pub struct bpf_map_create_opts {
     pub btf_key_type_id: __u32,
     pub btf_value_type_id: __u32,
     pub btf_vmlinux_value_type_id: __u32,
-    pub inner_map_fd: ::std::os::raw::c_int,
-    pub map_flags: ::std::os::raw::c_int,
+    pub inner_map_fd: __u32,
+    pub map_flags: __u32,
     pub map_extra: __u64,
-    pub numa_node: ::std::os::raw::c_int,
-    pub map_ifindex: ::std::os::raw::c_int,
+    pub numa_node: __u32,
+    pub map_ifindex: __u32,
 }
 extern "C" {
     pub fn bpf_map_create(
@@ -2587,6 +2706,39 @@ extern "C" {
         log_level: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_btf_load_opts {
+    pub sz: size_t,
+    pub log_buf: *mut ::std::os::raw::c_char,
+    pub log_level: __u32,
+    pub log_size: __u32,
+}
+impl Default for bpf_btf_load_opts {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+extern "C" {
+    pub fn bpf_btf_load(
+        btf_data: *const ::std::os::raw::c_void,
+        btf_size: size_t,
+        opts: *const bpf_btf_load_opts,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_load_btf(
+        btf: *const ::std::os::raw::c_void,
+        btf_size: __u32,
+        log_buf: *mut ::std::os::raw::c_char,
+        log_buf_size: __u32,
+        do_log: bool,
+    ) -> ::std::os::raw::c_int;
+}
 extern "C" {
     pub fn bpf_map_update_elem(
         fd: ::std::os::raw::c_int,
@@ -2651,7 +2803,7 @@ pub struct bpf_map_batch_opts {
 extern "C" {
     pub fn bpf_map_delete_batch(
         fd: ::std::os::raw::c_int,
-        keys: *mut ::std::os::raw::c_void,
+        keys: *const ::std::os::raw::c_void,
         count: *mut __u32,
         opts: *const bpf_map_batch_opts,
     ) -> ::std::os::raw::c_int;
@@ -2681,8 +2833,8 @@ extern "C" {
 extern "C" {
     pub fn bpf_map_update_batch(
         fd: ::std::os::raw::c_int,
-        keys: *mut ::std::os::raw::c_void,
-        values: *mut ::std::os::raw::c_void,
+        keys: *const ::std::os::raw::c_void,
+        values: *const ::std::os::raw::c_void,
         count: *mut __u32,
         opts: *const bpf_map_batch_opts,
     ) -> ::std::os::raw::c_int;
@@ -2709,6 +2861,14 @@ extern "C" {
         attachable_fd: ::std::os::raw::c_int,
         type_: bpf_attach_type,
         flags: ::std::os::raw::c_uint,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_prog_attach_opts(
+        prog_fd: ::std::os::raw::c_int,
+        attachable_fd: ::std::os::raw::c_int,
+        type_: bpf_attach_type,
+        opts: *const bpf_prog_attach_opts,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -2747,11 +2907,30 @@ pub struct bpf_link_create_opts {
 #[derive(Copy, Clone)]
 pub union bpf_link_create_opts__bindgen_ty_1 {
     pub perf_event: bpf_link_create_opts__bindgen_ty_1__bindgen_ty_1,
+    pub kprobe_multi: bpf_link_create_opts__bindgen_ty_1__bindgen_ty_2,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_link_create_opts__bindgen_ty_1__bindgen_ty_1 {
     pub bpf_cookie: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_link_create_opts__bindgen_ty_1__bindgen_ty_2 {
+    pub flags: __u32,
+    pub cnt: __u32,
+    pub syms: *mut *const ::std::os::raw::c_char,
+    pub addrs: *const ::std::os::raw::c_ulong,
+    pub cookies: *const __u64,
+}
+impl Default for bpf_link_create_opts__bindgen_ty_1__bindgen_ty_2 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
 }
 impl Default for bpf_link_create_opts__bindgen_ty_1 {
     fn default() -> Self {
@@ -2892,15 +3071,6 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn bpf_load_btf(
-        btf: *const ::std::os::raw::c_void,
-        btf_size: __u32,
-        log_buf: *mut ::std::os::raw::c_char,
-        log_buf_size: __u32,
-        do_log: bool,
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
     pub fn bpf_task_fd_query(
         pid: ::std::os::raw::c_int,
         fd: ::std::os::raw::c_int,
@@ -2947,7 +3117,7 @@ pub struct bpf_test_run_opts {
     pub duration: __u32,
     pub flags: __u32,
     pub cpu: __u32,
-    pub __bindgen_padding_0: [u8; 4usize],
+    pub batch_size: __u32,
 }
 impl Default for bpf_test_run_opts {
     fn default() -> Self {
@@ -3029,7 +3199,7 @@ pub const BTF_KIND_DECL_TAG: ::std::os::raw::c_uint = 17;
 pub const BTF_KIND_TYPE_TAG: ::std::os::raw::c_uint = 18;
 pub const NR_BTF_KINDS: ::std::os::raw::c_uint = 19;
 pub const BTF_KIND_MAX: ::std::os::raw::c_uint = 18;
-pub type _bindgen_ty_80 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_85 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct btf_enum {
@@ -3059,7 +3229,7 @@ pub struct btf_param {
 pub const BTF_VAR_STATIC: ::std::os::raw::c_uint = 0;
 pub const BTF_VAR_GLOBAL_ALLOCATED: ::std::os::raw::c_uint = 1;
 pub const BTF_VAR_GLOBAL_EXTERN: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_81 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_86 = ::std::os::raw::c_uint;
 pub const BTF_FUNC_STATIC: btf_func_linkage = 0;
 pub const BTF_FUNC_GLOBAL: btf_func_linkage = 1;
 pub const BTF_FUNC_EXTERN: btf_func_linkage = 2;
@@ -3080,16 +3250,6 @@ pub struct btf_var_secinfo {
 #[derive(Debug, Default, Copy, Clone)]
 pub struct btf_decl_tag {
     pub component_idx: __s32,
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct btf {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct btf_ext {
-    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -3225,9 +3385,6 @@ extern "C" {
     pub fn btf__set_fd(btf: *mut btf, fd: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn btf__get_raw_data(btf: *const btf, size: *mut __u32) -> *const ::std::os::raw::c_void;
-}
-extern "C" {
     pub fn btf__raw_data(btf: *const btf, size: *mut __u32) -> *const ::std::os::raw::c_void;
 }
 extern "C" {
@@ -3253,7 +3410,7 @@ extern "C" {
     pub fn btf_ext__free(btf_ext: *mut btf_ext);
 }
 extern "C" {
-    pub fn btf_ext__get_raw_data(
+    pub fn btf_ext__raw_data(
         btf_ext: *const btf_ext,
         size: *mut __u32,
     ) -> *const ::std::os::raw::c_void;
@@ -3674,6 +3831,10 @@ pub struct bpf_object_open_opts {
     pub __bindgen_padding_1: [u8; 4usize],
     pub kconfig: *const ::std::os::raw::c_char,
     pub btf_custom_path: *const ::std::os::raw::c_char,
+    pub kernel_log_buf: *mut ::std::os::raw::c_char,
+    pub kernel_log_size: size_t,
+    pub kernel_log_level: __u32,
+    pub __bindgen_padding_2: [u8; 4usize],
 }
 impl Default for bpf_object_open_opts {
     fn default() -> Self {
@@ -3786,11 +3947,6 @@ extern "C" {
 }
 extern "C" {
     pub fn bpf_object__btf_fd(obj: *const bpf_object) -> ::std::os::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct bpf_program {
-    _unused: [u8; 0],
 }
 extern "C" {
     pub fn bpf_object__find_program_by_title(
@@ -4026,6 +4182,33 @@ extern "C" {
     ) -> *mut bpf_link;
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_kprobe_multi_opts {
+    pub sz: size_t,
+    pub syms: *mut *const ::std::os::raw::c_char,
+    pub addrs: *const ::std::os::raw::c_ulong,
+    pub cookies: *const __u64,
+    pub cnt: size_t,
+    pub retprobe: bool,
+    pub __bindgen_padding_0: [u8; 7usize],
+}
+impl Default for bpf_kprobe_multi_opts {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+extern "C" {
+    pub fn bpf_program__attach_kprobe_multi_opts(
+        prog: *const bpf_program,
+        pattern: *const ::std::os::raw::c_char,
+        opts: *const bpf_kprobe_multi_opts,
+    ) -> *mut bpf_link;
+}
+#[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct bpf_uprobe_opts {
     pub sz: size_t,
@@ -4109,11 +4292,6 @@ extern "C" {
         target_fd: ::std::os::raw::c_int,
         attach_func_name: *const ::std::os::raw::c_char,
     ) -> *mut bpf_link;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct bpf_map {
-    _unused: [u8; 0],
 }
 extern "C" {
     pub fn bpf_map__attach_struct_ops(map: *const bpf_map) -> *mut bpf_link;
@@ -4220,13 +4398,13 @@ extern "C" {
     pub fn bpf_program__set_sk_lookup(prog: *mut bpf_program) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn bpf_program__get_type(prog: *const bpf_program) -> bpf_prog_type;
+    pub fn bpf_program__type(prog: *const bpf_program) -> bpf_prog_type;
 }
 extern "C" {
     pub fn bpf_program__set_type(prog: *mut bpf_program, type_: bpf_prog_type);
 }
 extern "C" {
-    pub fn bpf_program__get_expected_attach_type(prog: *const bpf_program) -> bpf_attach_type;
+    pub fn bpf_program__expected_attach_type(prog: *const bpf_program) -> bpf_attach_type;
 }
 extern "C" {
     pub fn bpf_program__set_expected_attach_type(prog: *mut bpf_program, type_: bpf_attach_type);
@@ -4236,6 +4414,28 @@ extern "C" {
 }
 extern "C" {
     pub fn bpf_program__set_flags(prog: *mut bpf_program, flags: __u32) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_program__log_level(prog: *const bpf_program) -> __u32;
+}
+extern "C" {
+    pub fn bpf_program__set_log_level(
+        prog: *mut bpf_program,
+        log_level: __u32,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_program__log_buf(
+        prog: *const bpf_program,
+        log_size: *mut size_t,
+    ) -> *const ::std::os::raw::c_char;
+}
+extern "C" {
+    pub fn bpf_program__set_log_buf(
+        prog: *mut bpf_program,
+        log_buf: *mut ::std::os::raw::c_char,
+        log_size: size_t,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn bpf_program__set_attach_target(
@@ -4429,9 +4629,6 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn bpf_map__get_pin_path(map: *const bpf_map) -> *const ::std::os::raw::c_char;
-}
-extern "C" {
     pub fn bpf_map__pin_path(map: *const bpf_map) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
@@ -4541,6 +4738,53 @@ extern "C" {
         info: *mut xdp_link_info,
         info_size: size_t,
         flags: __u32,
+    ) -> ::std::os::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy, Clone)]
+pub struct bpf_xdp_attach_opts {
+    pub sz: size_t,
+    pub old_prog_fd: ::std::os::raw::c_int,
+    pub __bindgen_padding_0: [u8; 4usize],
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy, Clone)]
+pub struct bpf_xdp_query_opts {
+    pub sz: size_t,
+    pub prog_id: __u32,
+    pub drv_prog_id: __u32,
+    pub hw_prog_id: __u32,
+    pub skb_prog_id: __u32,
+    pub attach_mode: __u8,
+    pub __bindgen_padding_0: [u8; 7usize],
+}
+extern "C" {
+    pub fn bpf_xdp_attach(
+        ifindex: ::std::os::raw::c_int,
+        prog_fd: ::std::os::raw::c_int,
+        flags: __u32,
+        opts: *const bpf_xdp_attach_opts,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_xdp_detach(
+        ifindex: ::std::os::raw::c_int,
+        flags: __u32,
+        opts: *const bpf_xdp_attach_opts,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_xdp_query(
+        ifindex: ::std::os::raw::c_int,
+        flags: ::std::os::raw::c_int,
+        opts: *mut bpf_xdp_query_opts,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_xdp_query_id(
+        ifindex: ::std::os::raw::c_int,
+        flags: ::std::os::raw::c_int,
+        prog_id: *mut __u32,
     ) -> ::std::os::raw::c_int;
 }
 pub const BPF_TC_INGRESS: bpf_tc_attach_point = 1;
@@ -4913,6 +5157,25 @@ extern "C" {
 extern "C" {
     pub fn bpf_probe_large_insn_limit(ifindex: __u32) -> bool;
 }
+extern "C" {
+    pub fn libbpf_probe_bpf_prog_type(
+        prog_type: bpf_prog_type,
+        opts: *const ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn libbpf_probe_bpf_map_type(
+        map_type: bpf_map_type,
+        opts: *const ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn libbpf_probe_bpf_helper(
+        prog_type: bpf_prog_type,
+        helper_id: bpf_func_id,
+        opts: *const ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
+}
 pub const BPF_PROG_INFO_FIRST_ARRAY: bpf_prog_info_array = 0;
 pub const BPF_PROG_INFO_JITED_INSNS: bpf_prog_info_array = 0;
 pub const BPF_PROG_INFO_XLATED_INSNS: bpf_prog_info_array = 1;
@@ -5025,6 +5288,52 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct bpf_var_skeleton {
+    pub name: *const ::std::os::raw::c_char,
+    pub map: *mut *mut bpf_map,
+    pub addr: *mut *mut ::std::os::raw::c_void,
+}
+impl Default for bpf_var_skeleton {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bpf_object_subskeleton {
+    pub sz: size_t,
+    pub obj: *const bpf_object,
+    pub map_cnt: ::std::os::raw::c_int,
+    pub map_skel_sz: ::std::os::raw::c_int,
+    pub maps: *mut bpf_map_skeleton,
+    pub prog_cnt: ::std::os::raw::c_int,
+    pub prog_skel_sz: ::std::os::raw::c_int,
+    pub progs: *mut bpf_prog_skeleton,
+    pub var_cnt: ::std::os::raw::c_int,
+    pub var_skel_sz: ::std::os::raw::c_int,
+    pub vars: *mut bpf_var_skeleton,
+}
+impl Default for bpf_object_subskeleton {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+extern "C" {
+    pub fn bpf_object__open_subskeleton(s: *mut bpf_object_subskeleton) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn bpf_object__destroy_subskeleton(s: *mut bpf_object_subskeleton);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct gen_loader_opts {
     pub sz: size_t,
     pub data: *const ::std::os::raw::c_char,
@@ -5080,6 +5389,48 @@ extern "C" {
 }
 extern "C" {
     pub fn bpf_linker__free(linker: *mut bpf_linker);
+}
+pub type libbpf_prog_setup_fn_t = ::std::option::Option<
+    unsafe extern "C" fn(
+        prog: *mut bpf_program,
+        cookie: ::std::os::raw::c_long,
+    ) -> ::std::os::raw::c_int,
+>;
+pub type libbpf_prog_prepare_load_fn_t = ::std::option::Option<
+    unsafe extern "C" fn(
+        prog: *mut bpf_program,
+        opts: *mut bpf_prog_load_opts,
+        cookie: ::std::os::raw::c_long,
+    ) -> ::std::os::raw::c_int,
+>;
+pub type libbpf_prog_attach_fn_t = ::std::option::Option<
+    unsafe extern "C" fn(
+        prog: *const bpf_program,
+        cookie: ::std::os::raw::c_long,
+        link: *mut *mut bpf_link,
+    ) -> ::std::os::raw::c_int,
+>;
+#[repr(C)]
+#[derive(Debug, Default, Copy, Clone)]
+pub struct libbpf_prog_handler_opts {
+    pub sz: size_t,
+    pub cookie: ::std::os::raw::c_long,
+    pub prog_setup_fn: libbpf_prog_setup_fn_t,
+    pub prog_prepare_load_fn: libbpf_prog_prepare_load_fn_t,
+    pub prog_attach_fn: libbpf_prog_attach_fn_t,
+}
+extern "C" {
+    pub fn libbpf_register_prog_handler(
+        sec: *const ::std::os::raw::c_char,
+        prog_type: bpf_prog_type,
+        exp_attach_type: bpf_attach_type,
+        opts: *const libbpf_prog_handler_opts,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn libbpf_unregister_prog_handler(
+        handler_id: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
