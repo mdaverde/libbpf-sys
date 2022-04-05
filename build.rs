@@ -71,6 +71,7 @@ fn main() {
         .allowlist_var("BTF_.+")
         .allowlist_var("XSK_.+")
         .allowlist_var("XDP_.+")
+        .allowlist_var("_bpf_helper_func_names")
         .parse_callbacks(Box::new(ignored_macros))
         .header("bindings.h")
         .clang_arg(format!("-I{}", src_dir.join("libbpf/include").display()))

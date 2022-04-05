@@ -6,6 +6,7 @@
 #include <bpf/xsk.h>
 #else
 #include "libbpf/include/uapi/linux/if_link.h"
+#include "libbpf/include/uapi/linux/bpf.h"
 #include "libbpf/src/bpf.h"
 #include "libbpf/src/btf.h"
 #include "libbpf/src/libbpf.h"
@@ -41,3 +42,10 @@ extern __u64 _xsk_umem__extract_addr(__u64 addr);
 extern __u64 _xsk_umem__extract_offset(__u64 addr);
 
 extern __u64 _xsk_umem__add_offset_to_addr(__u64 addr);
+
+#define BPF_HELPER_MAKE_ENTRY(name)	[BPF_FUNC_ ## name] = "bpf_" # name
+const char * const _bpf_helper_func_names[] = {
+	__BPF_FUNC_MAPPER(BPF_HELPER_MAKE_ENTRY)
+};
+
+#undef BPF_HELPER_MAKE_ENTRY
