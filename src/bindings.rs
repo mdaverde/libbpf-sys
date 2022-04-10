@@ -5681,6 +5681,12 @@ extern "C" {
 extern "C" {
     pub static _bpf_helper_func_names: [*const ::std::os::raw::c_char; 194usize];
 }
+extern "C" {
+    pub fn _BPF_MOV64_IMM(dst: __u8, imm: __s32) -> bpf_insn;
+}
+extern "C" {
+    pub fn _BPF_EXIT_INSN() -> bpf_insn;
+}
 pub type __builtin_va_list = [__va_list_tag; 1usize];
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

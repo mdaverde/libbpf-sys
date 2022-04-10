@@ -11,6 +11,7 @@
 #include "libbpf/src/btf.h"
 #include "libbpf/src/libbpf.h"
 #include "libbpf/src/xsk.h"
+#include "libbpf/include/linux/filter.h"
 #endif /* __LIBBPF_SYS_NOVENDOR */
 
 extern __u64 *_xsk_ring_prod__fill_addr(struct xsk_ring_prod *fill, __u32 idx);
@@ -49,3 +50,7 @@ const char * const _bpf_helper_func_names[] = {
 };
 
 #undef BPF_HELPER_MAKE_ENTRY
+
+extern struct bpf_insn _BPF_MOV64_IMM(__u8 dst, __s32 imm);
+
+extern struct bpf_insn _BPF_EXIT_INSN();
