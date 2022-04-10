@@ -53,4 +53,10 @@ const char * const _bpf_helper_func_names[] = {
 
 extern struct bpf_insn _BPF_MOV64_IMM(__u8 dst, __s32 imm);
 
+extern struct bpf_insn _BPF_ALU64_IMM(__u8 op, __u8 dst, __s32 imm);
+
+extern struct bpf_insn _BPF_JMP_IMM(__u8 op, __u8 dst, __s32 imm, __s16 off);
+
+extern struct bpf_insn _BPF_JMP32_IMM(__u8 op, __u8 dst, __s32 imm, __s16 off);
+
 extern struct bpf_insn _BPF_EXIT_INSN();
