@@ -5522,6 +5522,9 @@ extern "C" {
 extern "C" {
     pub fn _xsk_umem__add_offset_to_addr(addr: __u64) -> __u64;
 }
+extern "C" {
+    pub static _bpf_helper_func_names: [*const ::std::os::raw::c_char; 192usize];
+}
 pub type __builtin_va_list = [__va_list_tag; 1usize];
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
