@@ -1,15 +1,13 @@
 [package]
-name = "libbpf-sys"
+name = "bpfdeploy-libbpf-sys"
 version = "0.7.0+v0.7.0"
-description = "Rust bindings to libbpf from the Linux kernel"
+description = "Fork of libbpf-sys"
 readme = "README.md"
 repository = "https://github.com/libbpf/libbpf-sys"
 homepage = "https://github.com/libbpf/libbpf-sys"
 keywords = ["bpf", "ebpf", "xdp"]
 authors = [
-	"Alex Forster <alex@alexforster.com>",
-	"Dan Siemon <dan@coverfire.com>",
-	"Daniel Xu <dxu@dxuuu.xyz>",
+	"Milan <milan@mdaverde.com>",
 ]
 license = "BSD-2-Clause"
 edition = "2018"
