@@ -3,8 +3,8 @@ name = "bpfdeploy-libbpf-sys"
 version = "0.7.0+v0.7.0"
 description = "Fork of libbpf-sys"
 readme = "README.md"
-repository = "https://github.com/libbpf/libbpf-sys"
-homepage = "https://github.com/libbpf/libbpf-sys"
+repository = "https://github.com/mdaverde/libbpf-sys"
+homepage = "https://github.com/mdaverde/libbpf-sys"
 keywords = ["bpf", "ebpf", "xdp"]
 authors = [
 	"Milan <milan@mdaverde.com>",
@@ -13,10 +13,6 @@ license = "BSD-2-Clause"
 edition = "2018"
 build = "build.rs"
 links = "libbpf"
-
-[badges]
-travis-ci = { repository = "libbpf/libbpf-sys" }
-maintenance = { status = "passively-maintained" }
 
 [build-dependencies]
 bindgen = { version = "^0.59", optional = true }
